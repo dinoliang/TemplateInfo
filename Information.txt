@@ -14,3 +14,5 @@ https://blogs.nvidia.com.tw/2019/10/22/what-is-edge-computing/
 TensorFlow或Caffe
 同態加密( homomorphic encryption)
 邊緣運算
+
+集團很好，部門呢?人事調整
