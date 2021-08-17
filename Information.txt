@@ -1,0 +1,16 @@
+TDD
+https://blog.csdn.net/lin_strong/article/details/84853138
+
+DevSecOps
+https://secview.io/posts/6-devsecops/
+https://secview.io/posts/3-owasp-testing-guide/
+https://www.microfocus.com/zh-tw/what-is/devsecops
+https://www.fisc.com.tw/Upload/d56378d2-ff51-4552-9ab2-12ff1dd64a84/TC/9506.pdf
+https://www.netadmin.com.tw/netadmin/zh-tw/technology/DB2930579C194F55B385E7DB416DDA1A
+https://www.2cm.com.tw/2cm/zh-tw/tech/A5E907141A914CBCB60D6D047C7C6548
+https://blogs.nvidia.com.tw/2019/10/22/what-is-edge-computing/
+
+
+TensorFlow或Caffe
+同態加密( homomorphic encryption)
+邊緣運算
