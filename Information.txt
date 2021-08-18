@@ -37,7 +37,34 @@ https://www.youtube.com/watch?v=BEJUdkPemYY
 #===================================================================
 python
 
+test001:
+class Employee:
+    def __init__(self):
+        self.cut_tree = 3
+    def work(self):
+        print("Working")
+    def __sleep(self):
+        print("Sleeping")
+
+#http://blog.castman.net/%E6%95%99%E5%AD%B8/2018/01/27/python-name-main.html
+if __name__ == "__main__":
+    Andy = Employee()
+    Andy.work()
+    #Andy.__sleep()
 
 
 各容器比較
 https://www.huaweicloud.com/articles/8336608fdd28a7061990bfc2b4049668.html
+
+
+
+#===================================================================
+go 跨平台 圖形介面程式 / 桌面應用程式
+https://ppfocus.com/0/di9f5240.html
+
+跨平台GUI
+electron
+QT / PyQT
+Flutter
+Xamarin
+
