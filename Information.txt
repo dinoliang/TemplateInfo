@@ -15,4 +15,29 @@ TensorFlow或Caffe
 同態加密( homomorphic encryption)
 邊緣運算
 
-集團很好，部門呢?人事調整
+#===================================================================
+in Linux
+use VirtualStudio
+c++ / python
+
+*** Using C++ on Linux in VS Code
+https://code.visualstudio.com/docs/cpp/config-linux
+https://code.visualstudio.com/docs/python/python-tutorial
+
+在 Visual Studio 中建立 Linux MSBuild c + + 專案
+https://docs.microsoft.com/zh-tw/cpp/linux/create-a-new-linux-project?view=msvc-160
+
+【 Tools 】Ubuntu 安裝 Visual Studio Code
+https://learningsky.io/tools-ubuntu-install-visual-studio-code/
+
+Install and Run C++ in Visual Studio Code (Linux)
+https://www.youtube.com/watch?v=BEJUdkPemYY
+
+
+#===================================================================
+python
+
+
+
+各容器比較
+https://www.huaweicloud.com/articles/8336608fdd28a7061990bfc2b4049668.html
