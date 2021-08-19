@@ -23,6 +23,7 @@ c++ / python
 *** Using C++ on Linux in VS Code
 https://code.visualstudio.com/docs/cpp/config-linux
 https://code.visualstudio.com/docs/python/python-tutorial
+https://code.visualstudio.com/docs/languages/go
 
 在 Visual Studio 中建立 Linux MSBuild c + + 專案
 https://docs.microsoft.com/zh-tw/cpp/linux/create-a-new-linux-project?view=msvc-160
