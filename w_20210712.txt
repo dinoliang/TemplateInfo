@@ -1,0 +1,1452 @@
+1. etcd on Windows Desktop OS 
+  1.1 可直接編譯版本 (需要Go環境)
+  1.2 可直接使用etcd已經release出的執行檔 (通常不會是最新版)
+2. etcd on Windows Server OS 
+  2.1 可直接編譯版本 (需要Go環境)
+  2.2 可直接使用etcd已經release出的執行檔 (通常不會是最新版)
+3. etcd on Linux OS 
+  3.1 可直接編譯版本 (需要Go環境)
+  3.2 可直接使用etcd已經release出的執行檔 (通常不會是最新版)
+4. etcd of Docker on Windows Desktop OS 
+  4.1 需要安裝WSL2 (太舊版本，或Windows Home，有可能無法安裝)
+  4.2 需要安裝Docker (Use Docker Desktop)
+  4.3 可使用已經包裝好etcd的Docker image
+  4.4 可自己用Go環境編譯出執行檔，並在包裝成自己的Docker image (因為是自己的Docker image，可以作更多彈性的調整)
+5. etcd of Docker on Windows Server OS 
+  5.1 需要安裝WSL2 (太舊版本，有可能無法安裝) (或是仍有安裝有問題的機率)
+  5.2 需要安裝Docker (Use Docker Desktop)
+  5.3 可使用已經包裝好etcd的Docker image
+  5.4 可自己用Go環境編譯出執行檔，並在包裝成自己的Docker image (因為是自己的Docker image，可以作更多彈性的調整)
+  5.5 ***2021/06/03更新:Windows Server OS目前幾乎還是不算支援WSL2，不建議使用
+6. etcd of Docker on Linux OS 
+  6.1 不須額外為了Docker的調整
+  6.2 需要安裝Docker
+  6.3 可使用已經包裝好etcd的Docker image
+  6.4 可自己用Go環境編譯出執行檔，並在包裝成自己的Docker image (因為是自己的Docker image，可以作更多彈性的調整)
+
+7. ***2021/06/03更新:etcd of Docker on Windows Desktop OS (Hyper-V)
+  7.1 需要能執行Hyper-V (Windows Home以下可能不支援)
+  7.2 需要安裝Docker (Use Docker Desktop)
+  7.3 可使用已經包裝好etcd的Docker image
+  7.4 可自己用Go環境編譯出執行檔，並在包裝成自己的Docker image (因為是自己的Docker image，可以作更多彈性的調整)
+8. ***2021/06/03更新:etcd of Docker on Windows Server OS  (Hyper-V)
+  8.1 需要能執行Hyper-V (Windows Server幾乎都是內建)
+  8.2 需要安裝Docker (Use Docker Desktop)
+  8.3 可使用已經包裝好etcd的Docker image
+  8.4 可自己用Go環境編譯出執行檔，並在包裝成自己的Docker image (因為是自己的Docker image，可以作更多彈性的調整)
+  8.5 實際在Hyper-V虛擬Windows Server 2019測試可使用
+
+9. Client端
+  7.1 可使用etcdctl
+  7.1 可使用API (完成類似curl的RESTFul API呼叫方式與接收)
+  7.2 可參考etcd client使用 (為Golang程式) (等待測試)
+  7.3 client的功能多於API
+
+
+
+1. etcd on Windows Server OS vs etcd of Docker on Windows Server OS (WSL2)
+2. etcd on Windows Server OS vs etcd of Docker on Windows Server OS (Hyper-V)
+3. etcd of Docker on Windows Server OS (WSL2) vs etcd of Docker on Windows Server OS (Hyper-V)
+
+
+Docker CE vs Docker EE (Mirantis Kubernetes Engine)
+etcd of Docker on Windows use WSL2 or Hyper-V
+
+etcd log or monitor (Prometheus + Grafana)
+Docker Monitor
+etcd client v3??? (需要Go環境)
+
+
+#===================================================================
+* etcd 
+Etcd官方文档中文版.
+https://doczhcn.gitbook.io/etcd/
+
+etcd TLS
+
+
+安全模式
+https://doczhcn.gitbook.io/etcd/index/index-1/security
+
+etcd discovery
+
+
+* Docker CE & EE
+  1. https://docker-docs.netlify.app/install/windows/docker-ee/
+  2. https://docs.microsoft.com/zh-tw/virtualization/windowscontainers/quick-start/set-up-environment?tabs=Windows-Server
+     https://docs.microsoft.com/zh-tw/virtualization/windowscontainers/manage-containers/container-base-images
+  3. EE版本只能從 PowerShell 資源庫下載 (DockerMsftProvider) (Install-Module -Name DockerMsftProvider -Repository PSGallery -Force)，目前版本是2019年的版本
+  4. Mirantis 收購 Docker EE，將功能應用在Mirantis Container Cloud、Mirantis Kubernetes Engine、Mirantis Container Rumtime
+  5. 差異在對Docker的應用或支援方面有影響
+  6. 如果要使用Docker image，仍要安裝Docker Engine
+  7. ***2021/06/02更新:EE版本只能從 PowerShell 資源庫下載 (DockerMsftProvider) ，雖然在PowerShell 資源庫中看到的是只到2019，但實際安裝的版本從version確認，是有在更新的
+    7.1 似乎沒有用到Hyper-V跟WSL2
+    7.2 但有些需要用到Linux系統的無法下載跟build 
+    7.3 所支援的容器基底映像 https://docs.microsoft.com/zh-tw/virtualization/windowscontainers/manage-containers/container-base-images   
+    https://docs.microsoft.com/zh-tw/troubleshoot/windows-server/containers/support-for-windows-containers-docker-on-premises-scenarios
+  8. ***2021/06/02更新
+    8.1 https://docs.mirantis.com/containers/v3.1/dockeree-products/mcr/mcr-windows.html
+    8.2 Install MCR on Windows Servers https://docs.mirantis.com/containers/v3.1/mcr-deployment-guide/mcr-windows.html
+
+
+* Hyper-V與WSL2差異
+  1. 安裝時都要有系統管理者權限
+  2. 執行Docker時，WSL2仍需系統管理者權限，Hyper-V不用
+  3. Windows Server 2016以上，應該都有允許Hyper-V
+  4. Window Home不一定有Hyper-V
+  5. WSL2建議版本
+    5.1. Desktop建議Windows 10 (若為 X64 系統：版本 1903 或更高版本，含 組建 18362 或更高組建。若為 ARM64 系統：版本 2004 或更高版本，含 組建 19041 或更高組建。)
+    5.2. Server建議Windows Server 2019 (版本 1709) 和更新版本上安裝。 (2016網路上有相關資訊，但需驗證) (2012應該是無法使用)
+         Windows Server 2019 LTSC似乎也只有WSL，若要用WSL2，仍須自行安裝，且偶而似乎仍有可能有問題 (https://github.com/MicrosoftDocs/WSL/issues/678)
+    5.3 ***2021/06/03更新:經在Hyper-V上架設Windows Server 2019測試，及相關資訊(https://github.com/MicrosoftDocs/WSL/issues/678)，目前Windows Server 2019應仍是無法使用WSL2
+  6. WSL2比Hyper-V更直接使用系統
+  7. WSL2執行Docker效能更好
+  8. Linux on Hyper-V可以有圖形介面，WSL2只有Command Line
+  9. 如果需要同步使用其他Linux的應用程式，Linux on Hyper-V優於WSL2
+
+效能上 : WSL2 > Hyper-V
+OS包含性 : Hyper-V > WSL2
+
+https://towardsdatascience.com/how-to-improve-docker-performance-with-wsl2-3a54402ab0f2
+https://tw.teammacosx.org/741243-docker-on-hyper-v-vs-XNPDIZ-article
+Linux on Hyper-V vs Linux on WSL2
+https://blog.logrocket.com/working-with-node-js-on-hyper-v-and-wsl2/
+https://www.docker.com/blog/docker-hearts-wsl-2/
+
+
+* Windows Server 2019
+  1. Docker by Hyper-V
+    1.1 巢狀虛擬化 (https://docs.microsoft.com/zh-tw/virtualization/hyper-v-on-windows/user-guide/nested-virtualization)
+    1.2 安裝Docker Desktop，並在安裝時安裝Hyper-V feature
+    1.2 本機先啟動巢狀虛擬化，在Hyper-V的Windows Server 2019下，可以啟動，且使用Command line可以運作
+  2. Docker by WSL2
+    2.1 目前Windows Server 2019無法使用WSL2 (https://github.com/MicrosoftDocs/WSL/issues/678)
+    2.2 目前WSL2比較完整支援似乎是在個人Windows專業版等更高版本
+  3. Dokcer by PowerShell資源庫
+    3.1 Docker EE (https://docs.microsoft.com/zh-tw/virtualization/windowscontainers/quick-start/set-up-environment?tabs=Windows-Server)
+    3.2 MCR (Mirantis的方案) (https://docs.mirantis.com/containers/v3.1/mcr-deployment-guide/mcr-windows.html)
+    3.3 ***2021/06/03更新:PowerShell資源庫 or Mirantis的版本都是依照Windows的Container (https://docs.microsoft.com/zh-tw/troubleshoot/windows-server/containers/support-for-windows-containers-docker-on-premises-scenarios)
+        只支援四個容器基底影像，
+        Windows伺服器核心：支援傳統 .NET framework 應用程式
+        Nano Server：針對 .NET 核心應用程式建立
+        Windows：提供完整 Windows API 集
+        WindowsIoT 核心：針對 IoT 應用程式建立的目的
+        ***無法使用Linux base類的container image
+  
+  Docker EE or MCR無法支援Linux base類的container image
+  在Windows Server 2019上，要使用etcd的微服務，偏向使用Docker Desktop by Hyper-V
+  (測試etcd image在Docker Desktop by Hyper-V on Windows Server 2019可用)
+
+
+巢狀虛擬化
+On : Set-VMProcessor -VMName <VMName> -ExposeVirtualizationExtensions $true
+Off : Set-VMProcessor -VMName <VMName> -ExposeVirtualizationExtensions $false
+Set-VMProcessor -VMName WServer2019 -ExposeVirtualizationExtensions $true
+
+
+* Microsoft wsl2 安裝資訊 (https://docs.microsoft.com/zh-tw/windows/wsl/install-win10#step-2---check-requirements-for-running-wsl-2)
+  1. Desktop建議Windows 10 (若為 X64 系統：版本 1903 或更高版本，含 組建 18362 或更高組建。若為 ARM64 系統：版本 2004 或更高版本，含 組建 19041 或更高組建。)
+  2. Server建議Windows Server 2019 (版本 1709) 和更新版本上安裝。 (2016網路上有相關資訊，但需驗證) (2012應該是無法使用)
+     Windows Server 2019 LTSC似乎也只有WSL，若要用WSL2，仍須自行安裝，且偶而似乎仍有可能有問題 (https://github.com/MicrosoftDocs/WSL/issues/678)
+
+
+* Microsoft etcd 多節點，time同步機制，目前windows雙機測試下有問題...
+
+
+* Docker優勢，只要佈署成功Docker，就可使用Docker images來進行微服務，而不在受OS環境影響，所以設定皆可一致。
+  目前問題，在Windows支援上，如果要安裝WSL2，但並非每個系統都能順利安裝(越舊版越難使用)。
+  若不要使用WSL2，則需要用Hyper-V(Windows Home可能不支援)，且Hyper-V與WSL2差異
+
+
+LCOW (Linux Container on Windows)
+
+LCOW Volume問題:
+github.com/coreos/pkg/capnslog.(*PackageLogger).Panicf
+docker: Error response from daemon: invalid option: Windows does not support Ulimits.
+Error response from daemon: Windows does not support diff of a running container
+failure in a Windows system call: The virtual machine or container with the specified identifier is not running.
+
+Docker EE(MCR) Server Version: 20.10.6
+Docker Desktop Server Version: 20.10.7
+
+EE & LCOW info
+https://docs.microsoft.com/en-us/troubleshoot/windows-server/containers/support-for-windows-containers-docker-on-premises-scenarios
+The Linux Containers on Windows (LCOW) feature on Windows Server has been deprecated.
+https://docs.docker.com/engine/deprecated/
+Deprecated	Linux containers on Windows (LCOW)
+https://docs.mirantis.com/mcr/20.10/rn-20-10/20-10-0.html
+
+The Linux Containers on Windows (LCOW) feature on Windows Server has been deprecated.
+Deprecated	Linux containers on Windows (LCOW)
+For a complete list of the CLI improvements, refer to the Docker release notes.
+
+LCOW cannot stop container or stop too long time
+https://github.com/moby/moby/issues/37919
+https://github.com/docker/for-win/issues/2642
+
+
+
+* etcd 監控 (x)
+* container 監控
+
+為何要監控container
+https://www.bmc.com/blogs/docker-monitoring-explained-monitor-containers-microservices/
+https://phoenixnap.com/blog/docker-container-monitoring-tools
+
+目前常用工具
+https://ithome.com.tw/news/142242
+https://dbaplus.cn/news-134-3400-1.html
+https://my.oschina.net/u/4641383/blog/4552425
+https://cdn-7.code-maze.com/top-docker-monitoring-tools/
+
+
+
+
+cadvisor和Node Exporter都可以提供监控数据，前者重点关注与容器的状态，后者关注与节点的状态
+https://blog.csdn.net/liumiaocn/article/details/104051553
+Node_Exporter <=> wmi_exporter
+https://devconnected.com/windows-server-monitoring-using-prometheus-and-wmi-exporter/
+https://www.itread01.com/content/1542850509.html
+
+
+cAdvisor
+https://github.com/google/cadvisor
+https://hackmd.io/@Yihsuan/ByJeApsNS?type=view
+
+etcd metrics
+https://etcd.io/docs/v3.4/op-guide/monitoring/
+https://grafana.com/grafana/dashboards/3070
+
+
+Prometheus
+https://prometheus.io/docs/introduction/overview/
+https://github.com/prometheus/prometheus
+https://k2r2bai.com/2018/06/10/cncf/prometheus/
+https://www.redhat.com/sysadmin/introduction-prometheus-metrics-and-performance-monitoring
+Self Ref :
+https://docs.docker.com/config/daemon/prometheus/ (Docker)
+* https://jishuin.proginn.com/p/763bfbd295f4
+
+采集的指标有很多，我们应该关注哪些？Google 在"Sre Handbook"中提出了"四个黄金信号"：延迟、流量、错误数、饱和度。实际操作中可以使用 Use 或 Red 方法作为指导，Use 用于资源，Red 用于服务。
+Use 方法：Utilization、Saturation、Errors。如 Cadvisor 数据
+Red 方法：Rate、Errors、Duration。如 Apiserver 性能指标
+
+Prometheus 采集中常见的服务分三种：
+在线服务：如 Web 服务、数据库等，一般关心请求速率，延迟和错误率即 RED 方法。
+离线服务：如日志处理、消息队列等，一般关注队列数量、进行中的数量，处理速度以及发生的错误即 Use 方法。
+批处理任务：和离线任务很像，但是离线任务是长期运行的，批处理任务是按计划运行的，如持续集成就是批处理任务，对应 K8S 中的 job 或 cronjob， 一般关注所花的时间、错误数等，因为运行周期短，很可能还没采集到就运行结束了，所以一般使用 Pushgateway，改拉为推。
+
+
+
+Prometheus alertmanager
+https://prometheus.io/docs/alerting/latest/alertmanager/
+Self Ref :
+https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/alert/prometheus-alert-manager-overview
+https://codingnote.cc/zh-tw/p/150392/
+alert rules
+https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
+*** Collection of alerting rules - Awesome Prometheus alerts (https://awesome-prometheus-alerts.grep.to/rules.html)
+
+test cpu
+docker exec -it node1 /bin/sh
+cat /dev/zero>/dev/null
+
+promtool
+You can use "promtool" to test your rules.
+
+bockup
+ref : TSDB Admin APIs
+https://www.robustperception.io/taking-snapshots-of-prometheus-data
+./prometheus --storage.tsdb.path=data/ --web.enable-admin-api
+curl -XPOST http://localhost:9090/api/v1/admin/tsdb/snapshot
+{"status":"success","data":{"name":"20180119T172548Z-78ec94e1b5003cb"}}
+To use a snapshot, make --storage.tsdb.path point to it.
+
+Prometheus data storage
+https://prometheus.io/docs/prometheus/latest/storage/
+https://prometheus.io/docs/prometheus/1.8/storage/
+https://k2r2bai.com/2018/06/27/devops/prometheus/prometheus-storage/
+
+Prometheus has several flags that configure local storage. The most important are: (by application parameter not by yml)
+--storage.tsdb.path: Where Prometheus writes its database. Defaults to data/.
+--storage.tsdb.retention.time: When to remove old data. Defaults to 15d. Overrides storage.tsdb.retention if this flag is set to anything other than default.
+--storage.tsdb.retention.size: [EXPERIMENTAL] The maximum number of bytes of storage blocks to retain. The oldest data will be removed first. Defaults to 0 or disabled. This flag is experimental and may change in future releases. Units supported: B, KB, MB, GB, TB, PB, EB. Ex: "512MB"
+--storage.tsdb.retention: Deprecated in favor of storage.tsdb.retention.time.
+--storage.tsdb.wal-compression: Enables compression of the write-ahead log (WAL). Depending on your data, you can expect the WAL size to be halved with little extra cpu load. This flag was introduced in 2.11.0 and enabled by default in 2.20.0. Note that once enabled, downgrading Prometheus to a version below 2.11.0 will require deleting the WAL.
+
+
+Prometheus + Elasticsearch
+Prometheus vs ELK
+https://www.metricfire.com/blog/prometheus-vs-elk/
+
+
+Prometheus + Thanos
+https://thanos.io/
+对于集群化和水平扩展，官方和社区都没有银弹，需要合理选择 Federate、Cortex、Thanos等方案。
+
+
+prometheus_tsdb_
+prometheus_tsdb_storage_blocks_bytes
+
+rate(prometheus_tsdb_compaction_chunk_size_bytes_sum[1h])/rate(prometheus_tsdb_compaction_chunk_samples_sum[1h])
+prometheus_tsdb_compaction_chunk_size_bytes_sum
+prometheus_tsdb_compaction_chunk_samples_sum
+
+
+Grafana
+https://github.com/grafana/grafana
+Self Ref :
+https://grafana.com/grafana/download?edition=oss&pg=get&plcmt=selfmanaged-box1-cta1&platform=windows
+https://grafana.com/docs/grafana/v7.5/administration/configuration/
+https://grafana.com/grafana/dashboards?pg=oss-graf&plcmt=prod-ent-banner
+local :
+http://localhost:3000 (admin/admin)
+
+
+dashboard
+etcd : 3070
+
+
+
+cAdvisor + Prometheus + Grafana + etcd metrics + Prometheus_alertmanager
+1. 安裝cAdvisor Container in Docker
+2. 啟動cAdvisor，可於http://localhost:8080，觀看
+3. 下載Prometheus，解壓縮放置C:
+4. 配置Prometheus.yml
+5. 啟動Prometheus，可於http://localhost:9090，觀看
+6. 安裝Grafana (使用系統管理者權限)
+7. 執行grafana-server.exe，可於http://localhost:3000，觀看
+8. Grafana，Add data source
+9. Grafana，Check dashboard
+10. 配置etcd (https://etcd.io/docs/v3.4/op-guide/monitoring/) to prometheus
+11. 調整Grafana for etcd
+12. 安裝Prometheus_alertmanager
+13. 增加rules.yml
+14. 配置Prometheus.yml
+15. 調整alertmanager.yml
+16. 執行alertmanager.exe，可於http://localhost:9093，觀看
+cAdvisor + Prometheus + Grafana Self Install Ref :
+https://www.uj5u.com/qita/240483.html (1)
+https://medium.com/@mertcan.simsek276/docker-monitoring-with-cadvisor-prometheus-and-grafana-adefe1202bf8 (3)
+https://developer.aliyun.com/article/725867 ()
+https://blog.csdn.net/qq_34556414/article/details/111091622 ()
+https://www.cnblogs.com/Dev0ps/p/10546276.html ()
+cAdvisor + Prometheus + Grafana Self Ref :
+https://yunlzheng.gitbook.io/prometheus-book/part-ii-prometheus-jin-jie/exporter/commonly-eporter-usage/use-prometheus-monitor-container
+https://yunlzheng.gitbook.io/prometheus-book/part-ii-prometheus-jin-jie/exporter/commonly-eporter-usage/use-prometheus-monitor-container
+https://yunlzheng.gitbook.io/prometheus-book/part-ii-prometheus-jin-jie/grafana/grafana-intro
+https://grafana.com/docs/grafana/latest/datasources/prometheus/
+https://prometheus.io/docs/guides/cadvisor/
+https://susi.dev/prometheus-grafana-loki-with-docker-compose (all by Docker)
+https://www.upnxtblog.com/index.php/2019/03/05/monitoring-docker-containers-using-prometheus-cadvisor-grafana/ (all by Docker)
+https://jackgruber.github.io/2020-08-15-Docker-monitoring-with-Grafana/ (all by Docker)	
+https://cloud.tencent.com/developer/article/1748430 (all by Docker)
+https://blog.eleven-labs.com/en/monitor-your-docker-containers/ (all by Docker)
+https://kubernetes.feisky.xyz/setup/addon-list/monitor (K8S)
+
+**Prometheus的up資訊應該是依據以保留的log，會出現舊的IP資訊一段時間，因此若是浮動IP的偵測，可能要注意
+
+
+
+Cadvisor
+Prometheus
+Grafana
+Cadvisor（采集所有容器资源利用率，相当于agent，在每个docker主机部署 ------> 普罗米修斯主动去从cadvisor里面去采集（数据收集与存储） ------> grafana展示（从普罗米修斯里面可视化展示）
+
+
+wmi_exporter
+https://github.com/prometheus-community/windows_exporter
+.\windows_exporter-0.16.0-amd64.exe --collectors.enabled "[defaults],process,container"
+.\windows_exporter-0.16.0-amd64.exe --collectors.enabled "[defaults],process,container,iis"
+.\windows_exporter-0.16.0-amd64.exe --collectors.enabled "[defaults],process,container,iis" --collector.process.whitelist="confd+"
+
+.\windows_exporter-0.16.0-amd64.exe --collectors.enabled "cpu,cs,cpu_info,container,iis,logical_disk,memory,net,os,process,service,system,textfile"
+
+OS運行時間
+windows_os_time{instance=~"$server"} - windows_system_system_up_time{instance=~"$server"}   
+記憶體
+windows_cs_physical_memory_bytes{instance=~"$server"}   
+CPU使用率
+100 - (avg by (instance) (irate(windows_cpu_time_total{mode="idle", instance=~"$server"}[5m])) * 100)   
+記憶體使用率
+(windows_cs_physical_memory_bytes{instance=~"$server"} - windows_os_physical_memory_free_bytes{instance=~"$server"}) / windows_cs_physical_memory_bytes{instance=~"$server"} * 100  
+硬碟使用率
+(sum(windows_logical_disk_size_bytes{volume!~"Harddisk.*", instance="$server"}) by (instance) - sum(windows_logical_disk_free_bytes{volume!~"Harddisk.*", instance="$server"}) by (instance)) / sum(windows_logical_disk_size_bytes{volume!~"Harddisk.*", instance="$server"}) by (instance) * 100 
+網路使用率
+sum(irate(windows_net_bytes_total{instance=~"$server",nic=~"Red_Hat_VirtIO_Ethernet_Adapter.*"}[1m])) / sum(windows_net_current_bandwidth{instance=~"$server",nic=~"Red_Hat_VirtIO_Ethernet_Adapter.*"}/8) * 100  
+硬碟I/O操作總數
+rate(windows_logical_disk_split_ios_total{instance=~"$server", volume !~"HarddiskVolume.+"}[30s]) 
+Process數
+windows_os_processes{instance=~"$server"} 
+硬碟剩餘空間
+windows_logical_disk_free_bytes{instance=~"$server", volume !~"HarddiskVolume.+"} 
+
+
+
+OS運行時間
+windows_os_time{job="wmi_exporter"} - windows_system_system_up_time{job="wmi_exporter"}
+記憶體
+windows_cs_physical_memory_bytes{job="wmi_exporter"}
+CPU使用率
+100 - (avg by (job) (irate(windows_cpu_time_total{mode="idle", job="wmi_exporter"}[5m])) * 100)
+記憶體使用率
+(windows_cs_physical_memory_bytes{job="wmi_exporter"} - windows_os_physical_memory_free_bytes{job="wmi_exporter"}) / windows_cs_physical_memory_bytes{job="wmi_exporter"} * 100
+硬碟使用率
+(sum(windows_logical_disk_size_bytes{volume!~"Harddisk.*", job="wmi_exporter"}) by (job) - sum(windows_logical_disk_free_bytes{volume!~"Harddisk.*", job="wmi_exporter"}) by (job)) / sum(windows_logical_disk_size_bytes{volume!~"Harddisk.*", job="wmi_exporter"}) by (job) * 100
+網路使用率
+sum(irate(windows_net_bytes_total{job="wmi_exporter",nic="Microsoft_Hyper_V_Network_Adapter"}[1m])) / sum(windows_net_current_bandwidth{job="wmi_exporter",nic="Microsoft_Hyper_V_Network_Adapter"}/8) * 100  
+硬碟I/O操作總數
+rate(windows_logical_disk_split_ios_total{job="wmi_exporter", volume !~"HarddiskVolume.+"}[30s])
+Process數
+windows_os_processes{job="wmi_exporter"} 
+硬碟剩餘空間
+windows_logical_disk_free_bytes{job="wmi_exporter", volume !~"HarddiskVolume.+"} 
+
+
+
+單一Process監控 (單一進程監控)
+??
+Get CPU Usage % for one specific process from windows_exporter :
+100 * sum by (instance) (irate(windows_process_cpu_time_total{job="xxxx", process="Idle"}[1m]))/sum by (instance) (irate(windows_process_cpu_time_total{job="xxxx"}[1m]))
+
+监控 windows process 进程存活
+up{job="wmi_exporter",instance="172.18.212.5:9182"} * on(instance) absent(windows_process_cpu_time_total{job="wmi_exporter",instance="172.18.212.5:9182",process="confd"}) ==> == 1 表absent
+// confd
+absent(windows_process_cpu_time_total{job="wmi_exporter",process="confd"})
+// iis
+absent(windows_process_cpu_time_total{job="wmi_exporter",process="w3wp"})
+absent(windows_service_status{name="w3svc", status="ok"})
+
+
+- alert: WinHostOutOfMemory
+expr: windows_os_physical_memory_free_bytes{job="wmi_exporter"} / windows_cs_physical_memory_bytes{job="wmi_exporter"} < 0.1
+labels:
+severity: warning
+annotations:
+summary: "Windows Host out of memory (instance {{ $labels.instance }})"
+description: "Node memory is filling up (< 10% left)\n VALUE = {{ $value }}\n LABELS: {{ $labels }}"
+
+- alert: WinHostCpuUsage
+expr: 100 - (avg by (instance) (irate(windows_cpu_time_total{job="wmi_exporter",mode="idle"}[2m])) * 100) > 80
+for: 10m
+labels:
+severity: warning
+annotations:
+summary: "CPU Usage (instance {{ $labels.instance }})"
+description: "CPU Usage is more than 80%\n VALUE = {{ $value }}\n LABELS: {{ $labels }}"
+
+
+irate(windows_iis_worker_request_errors_total[5m])
+(rate(windows:windows_iis_worker_request_errors_total:irate5m{status_code!="401"}[5m]))
+
+windows_service_status{status="ok"}
+
+
+Grafana dashboard
+ref : 10467 / 14532 / 13196 / 12422 / **6593
+iis : 12495
+
+
+blackbox_exporter
+The blackbox exporter allows blackbox probing of endpoints over HTTP, HTTPS, DNS, TCP and ICMP.
+
+probe_http_status_code{instance="http://172.18.212.5", job="blackbox"}
+
+iis url request time
+avg_over_time(probe_http_duration_seconds{instance="http://172.18.212.5", job="blackbox"}[1m])
+
+emaining time:
+probe_ssl_earliest_cert_expiry-time()
+
+HTTP status codes:
+probe_http_status_code
+
+All HTTP duration queries:
+probe_http_duration_seconds{phase="resolve"}
+probe_http_duration_seconds{phase="connect"}
+probe_http_duration_seconds{phase="tls"}
+probe_http_duration_seconds{phase="processing"}
+probe_http_duration_seconds{phase="transfer"}
+
+總耗時
+probe_duration_seconds{job=~'$job',instance=~'$targets'}
+
+Grafana dashboard
+ref : 9965 / 7587
+
+//////////////////////////////////////////
+- name: ssl_expiry
+  rules:
+  - alert: Ssl Cert Will Expire in 30 days
+    expr: probe_ssl_earliest_cert_expiry - time() < 86400 * 30
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "SSL certificate will expire soon on (instance {{ $labels.instance }})"
+      description: "SSL certificate expires in 30 days\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+/////////////////////////////////////////
+- name: blackbox-exporter
+    rules:
+    - alert: ProbeFailed
+      expr: probe_success == 0
+      for: 5m
+      labels:
+        severity: error
+      annotations:
+        summary: "Probe failed (instance {{ $labels.instance }})"
+        description: "Probe failed\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+    - alert: SlowProbe
+      expr: avg_over_time(probe_duration_seconds[1m]) > 1
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Slow probe (instance {{ $labels.instance }})"
+        description: "Blackbox probe took more than 1s to complete\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+    - alert: HttpStatusCode
+      expr: probe_http_status_code <= 199 OR probe_http_status_code >= 400
+      for: 5m
+      labels:
+        severity: error
+      annotations:
+        summary: "HTTP Status Code (instance {{ $labels.instance }})"
+        description: "HTTP status code is not 200-399\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+    - alert: SslCertificateWillExpireSoon
+      expr: probe_ssl_earliest_cert_expiry - time() < 86400 * 30
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "SSL certificate will expire soon (instance {{ $labels.instance }})"
+        description: "SSL certificate expires in 30 days\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+    - alert: SslCertificateHasExpired
+      expr: probe_ssl_earliest_cert_expiry - time()  <= 0
+      for: 5m
+      labels:
+        severity: error
+      annotations:
+        summary: "SSL certificate has expired (instance {{ $labels.instance }})"
+        description: "SSL certificate has expired already\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+    - alert: HttpSlowRequests
+      expr: avg_over_time(probe_http_duration_seconds[1m]) > 1
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "HTTP slow requests (instance {{ $labels.instance }})"
+        description: "HTTP request took more than 1s\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+    - alert: SlowPing
+      expr: avg_over_time(probe_icmp_duration_seconds[1m]) > 1
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Slow ping (instance {{ $labels.instance }})"
+        description: "Blackbox ping took more than 1s\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+
+
+ncabatoff/process-exporter (for linux/docker)
+Prometheus exporter that mines /proc to report on selected processes.
+
+other exporter
+https://awesomeopensource.com/projects/prometheus-exporter
+
+netdata
+
+
+
+Docker
+https://ithelp.ithome.com.tw/users/20103456/ironman/1320
+
+docker cp
+
+
+docker-compose
+Docker swarm
+Kubernetes
+OpenShift
+
+
+K8S
+https://kubernetes.io/zh/docs/home/
+https://kubernetes.io/zh/docs/tasks/tools/
+
+
+Docker swarm
+*Docker Desktop安裝包含Docker Swarm
+https://www.docker.com/docker-desktop/getting-started-for-windows
+
+
+k8s vs docker
+https://semaphoreci.com/blog/kubernetes-vs-docker
+
+
+
+etcd cluster
+https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/667496/
+1. Etcd 节点越多，容错能力越强，写性能越差。官方推荐的 etcd 集群节点数量为 3，5，7。Etcd 集群最少需要 [N/2] + 1 个节点工作，才能保证集群正常。
+   少於3台，就沒有容錯能力了
+   *依舊可能仍有其他Group的能力 ex:分散服務
+
+关于 etcd 的一些谣言
+https://ms2008.github.io/2019/12/04/etcd-rumor/
+
+https://etcd.io/docs/v3.4/op-guide/clustering/
+https://doczhcn.gitbook.io/etcd/index
+https://www.chaindesk.cn/witbook/36/510
+
+群协同工作的分布式数据库，Raft协议，通过复制日志文件的方式来保证数据的强一致性
+容错能力
+负载均衡
+
+TLS
+https://wiki.shileizcc.com/confluence/display/etcd/Etcd+TLS
+https://github.com/coreos/docs/blob/master/os/generate-self-signed-certificates.md
+https://etcd.io/docs/v3.4/op-guide/container/
+
+volume
+https://docs.docker.com/docker-for-windows/
+
+static:
+by initial-cluster
+.\etcd.exe --name node3 --listen-client-urls "http://0.0.0.0:2379" --advertise-client-urls="!_etcturl!" --listen-peer-urls="http://0.0.0.0:2380" --initial-advertise-peer-urls="http://172.18.208.1:2380" --initial-cluster-token="etcd-cluster-1" --initial-cluster="node1=http://172.18.215.115:2380,node2=http://172.18.208.1:2380,node3=http://172.18.208.1:2380" --initial-cluster-state=new
+(static模式，設定前就必須知道整個環境有幾個機器部屬etcd，可達到強一致性的效果，但因為是採取集群最少需要 (N/2)+1 個節點才能有容錯機制，故只有2台以下部屬etcd，就沒有容錯的空間，但仍有其他集群的效果)
+
+dynamic:
+1. etcd discovery
+  1.1 custom etcd discovery
+    1.1.1 有一個初始的etcd，且啟動 --enable-v2="true"
+    1.1.2 curl -X PUT https://{初始的etcd.IP}/v2/keys/discovery/6c007a14875d53d9bf0ef5a6fc0257c817f0fb83/_config/size -d value=3
+    1.1.3 --discovery https://{初始的etcd.IP}/v2/keys/discovery/6c007a14875d53d9bf0ef5a6fc0257c817f0fb83
+  1.2 public etcd discovery
+    1.2.1 藉由curl -w "\n" 'https://discovery.etcd.io/new?size=3'，產生cluster數量的token
+    1.2.2 --discovery https://discovery.etcd.io/3e86b59982e49066c5d813af1c2e2579cbf573de
+2. DNS discovery
+
+* 1. static，需要知道全部的節點位置，不可以額外增加，若要增加，就要全部部屬的機器，全部調整設定
+  2. dynamic public，需要所有機器有能連到外網的功能，才可以使用。雖然有彈性增加的機會，但若是超過一開始決定的數量，也要全部部屬的機器，全部調整設定
+  3. dynamic custom，需要至少有一台已經執行的etcd，且是要能執行v2功能的etcd，才可以使用。雖然有彈性增加的機會，但若是超過一開始決定的數量，也要全部部屬的機器，全部調整設定
+
+* 1. 若固定機器數量及IP，用static即可。
+  2. 若不能固定機器數量，所有機器接可連到外網，因為不要額外有一台etcd當初始機器，public應較為適合
+
+
+
+Reverse proxy
+https://www.jyt0532.com/2019/11/18/proxy-reverse-proxy/
+
+Reverse proxy by nginx+etcd+confd
+https://www.huaweicloud.com/articles/a9828a76efaae2048c1471a39dd11f61.html
+https://www.pianshen.com/article/9854420489/
+https://www.programmersought.com/article/79104512523/
+https://iter01.com/447083.html
+https://www.gushiciku.cn/pl/puxg/zh-tw
+https://newgoodlooking.pixnet.net/blog/post/127442967-%E4%BD%BF%E7%94%A8etcd%2Bconfd%E7%AE%A1%E7%90%86nginx%E9%85%8D%E7%BD%AE---anker
+https://www.chenshaowen.com/blog/service-discovery-etcd-confd-nginx.html
+https://www.cnblogs.com/Anker/p/6112022.html
+*https://blog.csdn.net/yangbosos/article/details/89331224 = https://blog.51cto.com/lizhenliang/1910150
+
+nginx + etcd + confd docker-compose
+*https://blog.csdn.net/weixin_40777510/article/details/115062536
+https://github.com/zeeraw/nginx-confd/blob/master/docker-compose.yml
+https://www.cnblogs.com/xiaoqi/p/Jenkins-etcd-confd.html
+compare:
+https://blog.roncoo.com/article/127767
+https://github.com/lulouis/nginx-consul-template
+http://dockone.io/article/2189
+
+nginx docker
+*https://www.ucloud.cn/yun/27152.html
+https://medium.com/@xroms123/docker-%E5%BB%BA%E7%AB%8B-nginx-%E5%9F%BA%E7%A4%8E%E5%88%86%E4%BA%AB-68c0771457fb
+https://www.kancloud.cn/roeslys/linux/1690935
+https://gitee.com/Tinywan/dnmp
+
+nginx upstream??
+
+
+nginx 備份
+备份 备份安装目录下的nginx.conf配置文件及其使用include 加载的配置文件
+恢复 将备份的配置文件复制到新环境下的nginx的配置文件目录下，使用reload命令重新加载配置文件
+設定nginx的log備份機制
+cat /etc/logrotate.d/nginx
+daily，以天為單位做檔案切割，另外還有其他三種
+  weekly
+  monthly
+  yearly
+missingok，沒檔案的時候略過且不會發生錯誤
+rotate 52，保留的檔案個數，這邊指的是52個檔案
+compress，切割出來的檔案，將會壓縮成 gzip
+delaycompress，延遲壓縮，避免檔案還被咬著導致失敗
+notifempty，檔案內容是空的時候不做動作
+create 640 nginx adm，產生檔案時要給的使用者及權限
+sharedscripts，一般來說 postrotate / prerotate 會在每個檔案 rotate 後執行，加上這個指令的話就等於只會執行一次
+postrotate，在 endscript 的區間內是 rotate 結束後會執行的指令
+*是否要自動備份...
+
+
+confd
+https://github.com/kelseyhightower/confd/releases
+
+iis
+https://taiwin.blogspot.com/2019/12/windows-server-2019-iis.html
+https://computingforgeeks.com/how-to-configure-default-site-in-iis-server/
+https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/jj635851(v=ws.11)
+
+*Docker Communication
+docker network create --net test-network
+
+./confd -confdir /usr/local/confd/ -interval=2 -backend etcdv3 -node http://172.20.0.3:2379 -log-level debug
+
+
+*Docker container execute host command??
+/var/run/docker.sock??
+ssh??
+
+
+**微服務基礎建設
+https://columns.chicken-house.net/2017/12/31/microservice9-servicediscovery/
+
+**
+http://bos.itdks.com/d290fb60fd96420abb295d7e49c4621d.pdf
+
+
+
+iis
+https://ithelp.ithome.com.tw/articles/10190366
+https://www.netadmin.com.tw/netadmin/zh-tw/trend/284B428B3A8B40139BCC48E9D39C2786
+https://ithelp.ithome.com.tw/articles/10198154
+
+iis reverse proxy
+
+URL Rewrite
+https://www.iis.net/downloads/microsoft/url-rewrite
+Application Request Routing
+https://www.iis.net/downloads/microsoft/application-request-routing
+
+
+
+
+
+
+*etcd backup/restore
+*etcd 的k-v資料主要存在member\snap下的db(bbolt)，backup/restore可以直接針對這個檔案覆蓋，在重啟 (測試後不行，會有問題，還是要用.\etcdctl.exe snapshot restore)
+*指定etcd的data-dir，可以把member資料對應到local，利用etcdctl snapshot restore時，要先把member其母資料夾刪除，才能etcdctl snapshot restore
+*ex:
+.\etcdctl.exe --endpoints="http://172.27.128.208:2379" snapshot save reserveproxy.db
+.\etcdctl.exe snapshot restore reserveproxy.db --name="etcd_node1" --initial-cluster="etcd_node1=http://localhost:2380" --data-dir="C:\Users\Administrator\Downloads\nginx_sample07_iis_tls\etcd\data"
+.\etcdctl.exe snapshot restore reserveproxy.db --name="etcd_node1" --initial-advertise-peer-urls="http://172.27.128.208:2380" --initial-cluster-token="etcd-cluster-1" --initial-cluster="etcd_node1=http://172.27.128.208:2380" --data-dir="C:\Users\Administrator\Downloads\nginx_sample07_iis_tls\etcd\data"
+
+etcd backup & restore
+備份etcd，以便保留已經儲存在etcd中的資料。
+1. 指定etcd使用的data-dir對應到本機端的位置
+2. 因在restore時，會重建整個date-dir，若被包裝在docker內部的空間，較難以處理
+3. backup & restore，皆使用etcdctl來使用
+4. 啟動etcd
+5. backup : .\etcdctl.exe --endpoints="http://IP:2379" snapshot save etcd_backup.db
+6. 關閉etcd
+7. 移除對應的data-dir資料夾
+8. restore : .\etcdctl.exe snapshot restore etcd_backup.db --name="etcd_node1" --initial-cluster="etcd_node1=http://IP:2380" --data-dir="C:\...\etcd\data"
+9. 重啟etcd
+10. 相關資料已經會依備份的etcd_backup.db更新
+
+*docker container backup/restore
+*docker export : Export a container's filesystem as a tar archive
+ docker save : Save one or more images to a tar archive (streamed to STDOUT by default)
+ docker import : Import the contents from a tarball to create a filesystem image
+ docker commit : Create a new image from a container’s changes
+*export/import，save/load
+*docker export
+$ dokcer ps -a / docker ps -a -q
+$ docker export a8b14091b4e7 > calc-container.tar / $ docker export a8b14091b4e7 -o calc-container.tar (by windows)
+$ mkdir calc-container && tar -xf calc-container.tar -C calc-container
+$ tree -L 1 calc-container
+*docker import
+$ docker import calc-container.tar calcfs:latest
+$ docker image ls
+* docker commit : Create a new image from a container’s changes
+
+*docker run --rm --name nginx3 -itd nginx8093:latest /bin/sh /docker-entrypoint.sh nginx -g 'daemon off;'
+*docker-compose **tty: true ** entrypoint
+////////////////////////////////
+    #nginx8093:latest is imported image, just a filesytem image
+    nginx3:
+        restart: always
+        container_name: nginx3
+        image: nginx8093:latest
+        user: root
+        stdin_open: true # docker run -i
+        tty: true        # docker run -t
+        entrypoint: /bin/sh /docker-entrypoint.sh nginx -g 'daemon off;'
+        ports:
+            - "8093:8093"
+        volumes:
+            - ./web1:/usr/share/nginx/html
+        #command:
+        #    - "/docker-entrypoint.sh nginx"
+        #     - "/bin/sh -c /docker-entrypoint.sh nginx"
+        networks:
+            - default
+////////////////////////////////
+
+
+// for testing docker import
+docker import ^
+--change 'ENV ["PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin","NGINX_VERSION=1.21.0","NJS_VERSION=0.5.3","PKG_RELEASE=1~buster"]' ^
+--change 'ENTRYPOINT ["/docker-entrypoint.sh"]' ^
+--change 'CMD ["nginx","-g","daemon off;"]' ^
+ngnix8093.tar nginx8093:latest
+
+docker import --change 'ENV ["PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin","NGINX_VERSION=1.21.0","NJS_VERSION=0.5.3","PKG_RELEASE=1~buster"]' --change 'ENTRYPOINT ["/docker-entrypoint.sh"]' --change 'CMD ["nginx","-g","daemon off;"]' ngnix8093.tar nginx8093:latest
+docker import --change 'CMD ["nginx","-g","daemon off;"]' ngnix8093.tar nginx8093:latest
+docker import --change 'ENTRYPOINT ["/docker-entrypoint.sh"]' ngnix8093.tar nginx8093:latest
+docker import --change 'ENV ["PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin","NGINX_VERSION=1.21.0","NJS_VERSION=0.5.3","PKG_RELEASE=1~buster"] CMD ["/docker-entrypoint.sh","nginx"]' ngnix8093.tar nginx8093:latest
+docker import --change 'ENV "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"' --change 'ENV "NGINX_VERSION=1.21.0"' --change 'ENV "NJS_VERSION=0.5.3"' --change 'ENV "PKG_RELEASE=1~buster"' --change 'ENTRYPOINT "/docker-entrypoint.sh"' --change 'CMD "nginx"' ngnix8093.tar nginx8093:latest
+docker import --change 'ENV "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"' --change 'ENV "NGINX_VERSION=1.21.0"' --change 'ENV "NJS_VERSION=0.5.3"' --change 'ENV "PKG_RELEASE=1~buster"' --change 'ENTRYPOINT "/docker-entrypoint.sh"' ngnix8093.tar nginx8093:latest
+docker import --change 'CMD "/docker-entrypoint.sh"' --change 'CMD "nginx"' ngnix8093.tar nginx8093:latest
+
+
+*docker commit -p 1d340021374a mygynginx1
+docker save -o fedora-latest.tar fedora:latest
+docker load --input fedora.tar
+使用 docker commit 意味着所有对镜像的操作都是黑箱操作，生成的镜像也被称为黑箱镜像，换句话说，就是除了制作镜像的人知道执行过什么命令、怎么生成的镜像，别人根本无从得知。而且，即使是这个制作镜像的人，过一段时间后也无法记清具体在操作的。虽然 docker diff 或许可以告诉得到一些线索，但是远远不到可以确保生成一致镜像的地步。这种黑箱镜像的维护工作是非常痛苦的。
+而且，回顾之前提及的镜像所使用的分层存储的概念，除当前层外，之前的每一层都是不会发生改变的，换句话说，任何修改的结果仅仅是在当前层进行标记、添加、修改，而不会改动上一层。如果使用 docker commit 制作镜像，以及后期修改的话，每一次修改都会让镜像更加臃肿一次，所删除的上一层的东西并不会丢失，会一直如影随形的跟着这个镜像，即使根本无法访问到。这会让镜像更加臃肿。
+**最好的方式還是將變動的部分重新包進Dockerfile來重新製造新的image
+
+*
+使用export，是把container的當前執行的狀態包起來，所以import完，出現的image，其中內容是一個可執行狀態的文件系统，並不是像Dockerfile包出來的image
+使用commit，是把container的目前所有改變的資料，跟原先的image，在重新產生一個image，其中Dockerfile針對image的動作都會延續(多記錄一個跟原先image差異的部分)
+故使用commit後，在save成本機的檔案，之後再用load到別的環境，則可以複製當時的container
+但如有使用到volume的參考，記得要把相對的volume也記得備份
+
+
+docker image / docker container backup & restore
+save : Save one or more images to a tar archive (streamed to STDOUT by default)
+load ; Load an image from a tar archive or STDIN
+export : Export a container's filesystem as a tar archive
+import : Import the contents from a tarball to create a filesystem image
+commit : Create a new image from a container's changes
+1.
+若是單純要備份原有在docker images下的image，
+可以使用save保存，並利用load來恢復成docker image。
+2.
+若是要將目前已啟動的docker container環境保存下來，
+可以使用export保存，但export保存的資料為container的filesystem狀態，
+所以用import恢復後，雖然是產生一個docker image，
+但其實並無法正確依照原先docker image的方式執行，
+而是需要利用一個pseudo-TTY，來讓此filesystem掛載執行，
+就可以還原當初container的環境。
+3.
+若是想要把變動的docker container環境加原本的image資料保留，
+可以利用commit來將資料包存下來，
+再利用save將資料包裝成一個image，
+之後使用load恢復時，就是之前整個image加變動資料的，整個image。
+*不論哪個若有利用到volume來設定container內部的對應資料，記得要自行備份對應的volume空間資料。
+*設定檔最好還是能volume到host端，以方便實際地將其備份
+
+
+* docker add text editor
+docker exec -it <container> bash
+apt-get update
+apt-get install vim
+
+apt-get install procps
+
+ls -l /etc/*-release
+
+
+Ansible vs. Chef vs. Puppet vs. SaltStack
+
+
+Install dynamic reserve proxy to new device
+1. iis (URL Rewrite 與 Application Request Routing)
+URL Rewrite
+https://www.iis.net/downloads/microsoft/url-rewrite
+https://www.iis.net/downloads/microsoft/url-rewrite#additionalDownloads
+https://www.microsoft.com/web/handlers/webpi.ashx?command=getinstallerredirect&appid=urlrewrite2
+Application Request Routing
+https://www.iis.net/downloads/microsoft/application-request-routing
+https://www.microsoft.com/web/handlers/webpi.ashx?command=getinstallerredirect&appid=ARRv3_0
+2. natived etcd
+https://github.com/etcd-io/etcd/releases/download/v3.5.0/etcd-v3.5.0-windows-amd64.zip
+3. confd
+https://github.com/kelseyhightower/confd/releases/download/v0.16.0/confd-0.16.0-windows-amd64.exe
+4. wmi_exporter
+5. blackbox_exporter
+
+1. Prometheus
+2. Grafana
+3. Prometheus_alertmanager
+
+
+Ansible
+Ansible on Windwos Server 2019
+1. https://docs.ansible.com/ansible/latest/user_guide/windows_setup.html
+2. install python
+
+Ansible on Ubuntu
+1. https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#confirming-your-installation
+2. install pip
+3. install pywinrm
+
+playbook by win
+1. https://geekflare.com/ansible-playbook-windows-example/
+2. https://www.devopsschool.com/tutorial/ansible/ansible-windows-playbooks.html
+
+become_method
+
+schtasks /create /tn "etcd" /tr D:\\reverseproxy\\execute\\etcd.bat /sc once /st 11:35:00 /sd 2021/08/11
+
+nssm => become service
+start / stop service
+
+1. Create folder to save necessary file
+2. Download file
+3. Unzip file
+4. Install file
+5. Setup surrounding
+6. Setup startup file
+
+
+
+#===================================================================
+docker run -d -p 2379:2379 -p 2380:2380 --name node2 quay.io/coreos/etcd:v3.4.14 etcd --name node2 --listen-client-urls http://0.0.0.0:2379 --advertise-client-urls http://0.0.0.0:2379,http://172.18.208.1:2379 --listen-peer-urls http://0.0.0.0:2380 --initial-advertise-peer-urls http://172.18.208.1:2380 --initial-cluster-token etcd-cluster-1 --initial-cluster node1=http://172.168.215.115:2380,node2=http://172.18.208.1:2380,node3=http://172.18.208.1:3380 --initial-cluster-state new
+docker run -d -p 2379:2379 -p 2380:2380 --name node2 quay.io/coreos/etcd:v3.4.14 etcd --name node2 --listen-client-urls http://0.0.0.0:2379 --advertise-client-urls !_etcturl! --listen-peer-urls http://172.18.208.1:2380 --initial-advertise-peer-urls http://172.18.208.1:2380 --initial-cluster-token etcd-cluster-1 --initial-cluster node1=http://172.168.215.115:2380,node2=http://172.18.208.1:2380,node3=http://172.18.208.1:3380 --initial-cluster-state new
+
+docker run -d -p 2379:2379 -p 2380:2380 -v /etcd/data:/var/lib/etcd --name etcd quay.io/coreos/etcd:v3.4.14 etcd --name etcd_node1 --listen-client-urls=http://0.0.0.0:2379 --advertise-client-urls=http://0.0.0.0:2379 --data-dir=/var/lib/etcd
+
+docker run -d -p 2379:2379 -p 2380:2380 --name etcd quay.io/coreos/etcd:v3.4.14 etcd --name etcd_node1 --listen-client-urls=http://0.0.0.0:2379 --advertise-client-urls=http://0.0.0.0:2379 --data-dir=/var/lib/etcd
+docker run -d -p 2379:2379 -p 2380:2380 -v C:\Users\Administrator\Downloads\iis\etcd\data:/var/lib/etcd --name etcd quay.io/coreos/etcd:v3.4.14 etcd --name etcd_node1 --listen-client-urls=http://0.0.0.0:2379 --advertise-client-urls=http://0.0.0.0:2379 --data-dir=/var/lib/etcd
+docker run -d -p 2379:2379 -p 2380:2380 -v /C/Users/Administrator/Downloads/iis/etcd/data:/var/lib/etcd --name etcd quay.io/coreos/etcd:v3.4.14 etcd --name etcd_node1 --listen-client-urls=http://0.0.0.0:2379 --advertise-client-urls=http://0.0.0.0:2379 --data-dir=/var/lib/etcd
+docker run -d -p 2379:2379 -p 2380:2380 -v /C/Users/Administrator/Downloads/iis/etcd/data:/test --name etcd quay.io/coreos/etcd:v3.4.14 etcd --name etcd_node1 --data-dir=/test --listen-client-urls=http://0.0.0.0:2379 --advertise-client-urls=http://0.0.0.0:2379
+
+
+.\dockerd.exe -D --experimental --data-root c:\lcow
+docker run -d -p 2379:2379 -p 2380:2380 -v C:\Users\Administrator\Downloads\iis\etcd\data:/test --name etcd quay.io/coreos/etcd:v3.4.14 etcd --name etcd_node1 --listen-client-urls=http://0.0.0.0:2379 --advertise-client-urls=http://0.0.0.0:2379 --data-dir=/test
+docker run -d -p 2379:2379 -p 2380:2380 -v C:\Users\Administrator\Downloads\iis\etcd\tmp:/tmp --name etcd quay.io/coreos/etcd:v3.4.14 etcd --name etcd_node1 --listen-client-urls=http://0.0.0.0:2379 --advertise-client-urls=http://0.0.0.0:2379 --data-dir=/var/lib/etcd
+docker run -d -p 2379:2379 -p 2380:2380 --name etcd quay.io/coreos/etcd:v3.4.14 etcd --name etcd_node1 --listen-client-urls=http://0.0.0.0:2379 --advertise-client-urls=http://0.0.0.0:2379
+docker run --platform linux -d -p 2379:2379 -p 2380:2380 -it -v C:\Users\Administrator\Downloads\iis\etcd\data:/var/lib/etcd --name etcd quay.io/coreos/etcd:v3.4.14 /bin/sh
+docker run --platform linux -d -p 2379:2379 -p 2380:2380 -it -v C:\Users\Administrator\Downloads\iis\etcd\tmp:/tmp --name etcd quay.io/coreos/etcd:v3.4.14 /bin/sh
+docker run --platform linux --ulimit nofile=20480:40960 --ulimit nproc=1024:2048 -d -p 2379:2379 -p 2380:2380 -it -v C:\Users\Administrator\Downloads\iis\etcd\data:/var/lib/etcd --name etcd quay.io/coreos/etcd:v3.4.14 /bin/sh
+etcd --name etcd_node1 --listen-client-urls=http://0.0.0.0:2379 --advertise-client-urls=http://0.0.0.0:2379 --data-dir=/var/lib/etcd
+etcd --name etcd_node1 --listen-client-urls=http://0.0.0.0:2379 --advertise-client-urls=http://0.0.0.0:2379 --data-dir=/tmp
+etcd --debug --name etcd_node1 --listen-client-urls=http://0.0.0.0:2379 --advertise-client-urls=http://0.0.0.0:2379 --data-dir=/var/lib/etcd
+docker run --rm -it -v C:\host:/run alpine sh
+docker run hello-world:linux
+
+
+
+level=warning msg="Unable to locate plugin: C:\\Users\\Administrator\\Downloads\\iis\\etcd\\data,
+error looking up volume plugin C:\Users\Administrator\Downloads\iis\etcd\data: plugin "C:\\Users\\Administrator\\Downloads\\iis\\etcd\\data" not found
+
+
+--log-level=debug --logger=zap –-log-outputs=stderr > log 2>&1
+curl -L http://localhost:2379/metrics
+
+
+docker run --name nginx -p 8080:80 -v /usr/share/nginx/html -d nginx
+docker run --name nginx1 -p 8080:80 -v C:\Users\Administrator\Downloads\iis\web1:/usr/share/nginx/html -d nginx
+
+
+自動開機位置
+C:\Users\root\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup
+
+
+docker run -d --restart=always -v /var/run:/var/run:rw -p 8080:8080 --name=cadvisor google/cadvisor:latest
+docker run -d --restart=always -p 8080:8080 --name=cadvisor google/cadvisor:latest
+**"restart=always"
+
+
+docker run hello-world:linux
+docker run --isolation=hyperv hello-world:linux
+--isolation=hyperv
+
+
+PromQL ref :
+https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/promql/prometheus-aggr-ops
+https://prometheus.fuckcloudnative.io/di-san-zhang-prometheus/di-4-jie-cha-xun/functions
+
+PromQL ex
+sum(irate(container_cpu_usage_seconds_total{image!=""}[1m])) without (cpu)
+sum(increase(etcd_server_client_requests_total{job="etcd"}[1m]) or vector(0))
+
+1. Docker every container 的狀態
+2. Docker CPU usage
+3. etcd info
+
+手動發送 alert event
+curl -H "Content-Type: application/json" -d '[{"labels":{"alertname":"test-email","severity":"critical"}}]' localhost:9093/api/v1/alerts &&  curl -H "Content-Type: application/json" -d '[{"labels":{"alertname":"test-webhook"}}]' localhost:9093/api/v1/alerts
+
+
+alertmanager
+alertmanager.yml
+title: '{{ .CommonAnnotations.summary }}'
+text: '{{ .CommonAnnotations.description }}'
+
+告警进入顶级route后会遍历所有的子节点，直到找到最深的匹配route，并将告警发送到route定义的receiver中。如何route中设置continue为false，那么告警在匹配到第一个子节点之后就直接停止。
+
+match/match_re/matchers
+第一种方式基于"字符串"验证，通过设置match规则判断当前告警中是否存在标签labelname并且其值等于labelvalue。
+第二种方式则基于"正则表达式"，通过设置match_re验证当前告警标签的值是否满足正则表达式的内容。
+
+repeat_interval
+如果警报已经成功发送通知, 如果想设置发送告警通知之前要等待时间，则可以通过repeat_interval参数进行设置。
+
+group_by
+将多条告警合合并为一个通知。可以使用group_by来定义分组规则。
+
+group_wait
+有的时候为了能够一次性收集和发送更多的相关信息时，可以通过group_wait参数设置等待时间，如果在等待时间内当前group接收到了新的告警，这些告警将会合并为一个通知向receiver发送。
+
+group_interval
+用于定义相同的Gourp之间发送告警通知的时间间隔。
+
+
+
+prometheus.yml
+scrape_interval 参数表示的是 Prometheus 从各种 metrics 接口抓取指标数据的时间间隔
+evaluation_interval 参数表示的是 Prometheus 对报警规则进行评估计算的时间间隔。
+
+rules.yml
+for：评估等待时间（Pending Duration），用于表示只有当触发条件持续一段时间后才发送告警，在等待期间新产生的告警状态为pending
+
+alertmanager.yml
+group_by 参数起作用的地方了，为了避免连续发送类似的告警通知，可以将相关告警分到同一组中进行告警。
+一个新的报警分组被创建后，需要等待至少 group_wait 时间来初始化告警。
+当上一个告警通知发送到一个 group 后，我们在等待 group_interval 时长后，然后再将触发的告警以及已解决的告警发送给 receiver
+repeat_interval 参数，该参数主要是用于配置告警信息已经发送成功后，再次被触发发送的时间间隔
+
+
+
+Severity levels are as follows:
+0 —emergency: System unusable.
+1 —alert: Immediate action needed.
+2 —critical: Critical condition—default level.
+3 —error: Error condition.
+4 —warning: Warning condition.
+5 —notification: Normal but significant condition.
+6 —informational: Informational message only.
+
+
+
+ex:
+# 抑制器配置
+inhibit_rules: # 抑制規則
+  - source_match: # 源標籤警報觸發時抑制含有目標標籤的警報，在當前警報匹配 status: 'High'
+      status: 'High'  # 此處的抑制匹配一定在最上面的route中配置不然，會提示找不key。
+    target_match:
+      status: 'Warning' # 目標標籤值正則匹配，可以是正則表達式如: ".*MySQL.*"
+    equal: ['alertname','operations', 'instance'] # 確保這個配置下的標籤內容相同才會抑制，也就是說警報中必須有這三個標籤值才會被抑制。
+
+当已经发送的告警通知匹配到target_match和target_match_re规则，当有新的告警规则如果满足source_match或者定义的匹配规则，并且已发送的告警与新产生的告警中equal定义的标签完全相同，则启动抑制机制，新的告警不会发送。
+
+
+
+.\curl.exe -L http://localhost:2379/v3/cluster/member/list -X POST
+.\curl -L http://localhost:2379/v3/kv/put -X POST -d '{\"key\": \"Zm9v\", \"value\": \"YmFy\"}'
+.\curl -L http://localhost:2379/v3/kv/range -X POST -d '{\"key\": \"Zm9v\"}'
+
+https://github.com/etcd-io/etcd/blob/main/etcdctl/README.md
+.\etcdctl -w table member list
+.\etcdctl --endpoints=172.24.67.242:2379 -w table member list
+.\etcdctl endpoint --cluster health
+.\etcdctl -w table endpoint --cluster status
+
+
+
+
+TLS Key
+https://etcd.io/docs/v3.4/op-guide/security/
+https://wiki.shileizcc.com/confluence/display/etcd/Etcd+TLS
+https://my.oschina.net/u/4262536/blog/3614515
+
+.\cfssl gencert -initca  ca-csr.json | .\cfssljson -bare etcd-ca
+.\cfssl gencert -ca="ca.pem" -ca-key="ca-key.pem" -config="ca-config.json" -profile="peer" etcd-peer.json | .\cfssljson -bare peer
+.\cfssl gencert -ca="ca.pem" -ca-key="ca-key.pem" -config="ca-config.json" -profile="client" etcd-client.json | .\cfssljson -bare client
+.\cfssl gencert -ca="ca.pem" -ca-key="ca-key.pem" -config="ca-config.json" -profile="server" etcd-server.json | .\cfssljson -bare server
+
+.\etcdctl --endpoints=https:/localhost:3379 --cacert D:\Work\etcd\cfssl\ca.pem --cert D:\Work\etcd\cfssl\client.pem --key D:\Work\etcd\cfssl\client-key.pem check perf
+.\etcdctl --endpoints=https:/localhost:3379 --cacert D:\Work\etcd\cfssl\ca.pem --cert D:\Work\etcd\cfssl\client.pem --key D:\Work\etcd\cfssl\client-key.pem get key
+.\curl --cacert "D:\Work\etcd\cfssl\ca.pem" --cert "D:\Work\etcd\cfssl\client.pem" --key "D:\Work\etcd\cfssl\client-key.pem" -L https://localhost:3379/v2/keys/foo -XPUT -d value=bar -v
+
+.\curl --cacert "D:\Work\etcd\cfssl\ca.pem" --cert "D:\Work\etcd\cfssl\client.pem" --key "D:\Work\etcd\cfssl\client-key.pem" -L https://127.0.0.1:3379/v2/keys/foo -XPUT -d value=bar -v -k
+.\curl --cacert "D:\Work\etcd\cfssl\ca.pem" --cert "D:\Work\etcd\cfssl\server.pem" --key "D:\Work\etcd\cfssl\server-key.pem" -L https://127.0.0.1:3379/v2/keys/foo -XPUT -d value=bar -v -k
+.\curl --cacert ca.pem --cert client.pem --key client-key.pem -L https://127.0.0.1:3379/v2/keys/foo -XPUT -d value=bar -v -k
+
+
+.\curl --cacert "D:\Work\etcd\cfssl\ca.pem" --cert "D:\Work\etcd\cfssl\client.pem" --key "D:\Work\etcd\cfssl\client-key.pem" -L https://localhost:3379/v3/kv/range -X POST -d '{\"key\": \"Zm9v\"}'
+
+*--listen-client-urls的url就要改成https
+
+.\curl -w "\n" 'https://discovery.etcd.io/new?size=3'
+.\curl -X PUT https://172.24.64.1:2379/v2/keys/discovery/6c007a14875d53d9bf0ef5a6fc0257c817f0fb83/_config/size -d value=3
+.\curl -X PUT https://172.24.64.1:2379/v2/keys/discovery/7ebf099dba3f422e998c9356df930e2e/_config/size -d value=3
+
+.\curl -X PUT https://localhost:3379/v2/keys/discovery/6c007a14875d53d9bf0ef5a6fc0257c817f0fb83/_config/size -d value=3
+.\curl --cacert "D:\Work\etcd\cfssl\ca.pem" --cert "D:\Work\etcd\cfssl\client.pem" --key "D:\Work\etcd\cfssl\client-key.pem" -X PUT https://localhost:3379/v2/keys/discovery/6c007a14875d53d9bf0ef5a6fc0257c817f0fb83/_config/size -d value=3
+
+
+
+nginx + confd + etcd
+consider:
+1、nginx负载均衡的混合注册，使得nginx可以混合负载多个业务；
+2、不同机房如何在同一etcd集群上进行注册，如何规划；
+3、confd更新频率如何周期可控制，k/v每有变化实时触发reload太敏感，况且每个容器要注册多个k/v，在整体注册完之前，是不需要reload的；
+4、confd启动时如何关联多个etcd的地址，保证高可用；
+5、权限问题如何处理，怎么做，如果任何人知道ip和端口就可以注册，那么服务就垮了。
+
+
+#===================================================================
+5/31 etcd & etcd of Docker on Window Professional OS 安裝測試 + etcd on Windows Server 2012 測試 + etcd of Docker on Windows Server 2019資訊 + 目前資訊整理
+6/1 CE vs EE + Hyper-V vs WSL2
+6/2 Docker Desktop on Windows Server 2019 by Hyper-V測試 (Standard/Datacenter)(Docker Desktop by Hyper-V/Docker Desktop by WSL2/PowerShell資源庫(Docker EE/MRC))
+6/3 Docker EE & MRC on Windows Server 2019 by Hyper-V更多測試 + Docker Desktop on Windows Server 2019 by Hyper-V更多測試 + Native released etcd on Windows Server 2019 by Hyper-V測試 + 更新JIRA Comments的etcd 在各OS運行資訊 + 更新JIRA Comments的WSL2 & Hyper-V + 更新JIRA Comments的Windos Server 2019 (standard/datacenter) by Hyper-V
+2021/06/03更新:
+Docker EE & MRC僅限Windows base container image，在Hyper-V模擬Windows Server 2019，etcd of Docker Desktop & Native released etcd皆可運作
+6/4 日盛大探索 + 日盛大探索-進階課程(因應新冠肺炎疫情，將原實體課程「日盛新人訓」調整為線上課程)
+
+6/7 Container 監控評估 + 工具資訊
+6/8 家用環境 Window Server 2019 by VM 架設 + cAdvisor + Prometheus + Grafana 資訊
+6/9 cAdvisor + Prometheus + Grafana + etcd metrics 建構 + 加入原生etcd metrics到Prometheus + 預計加入Prometheus_alertmanager + 更新Container 監控
+6/10 cAdvisor + Prometheus + Grafana + etcd metrics + Prometheus_alertmanager 建構 + 加入Prometheus_alertmanager(測試smtp，在公司電腦目前無法發送) + 更新Grafana 8.0 + Grafana 8.0 設定 + 更新Container 監控 + 新VPN測試、使用
+6/11 測試Prometheus_alertmanager能發生警告的方法 (測試smtp，在公司電腦目前無法發送) (webhook使用alertmanager-webhook-logger可接收) + 測試Prometheus_alertmanager能發生警告時間區隔
+
+*alertmanager-webhook-logger : C:\Users\F125994189\go\bin
+調整Prometheus_alertmanager能發生警告的方法 + 依可能使用方式調整cAdvisor + Prometheus + Grafana + etcd metrics + Prometheus_alertmanager
+alertmanager-webhook-logger for testing webhook
+
+Docker Swarm/Kubernetes/OpenShift、Terraform考慮
+
+6/15 評估回覆 + 更新Description + 調整、測試cAdvisor + Prometheus + Grafana + etcd metrics + Prometheus_alertmanager架構
+6/16 110年度第1次法令遵循_數位發展處 + etcd cluster測試 (static模式，設定前就必須知道整個環境有幾個機器部屬etcd，有達到etcd cluster優點) + 新增Comment (etcd cluster)
+6/17 etcd cluster測試 (Dynamic模式)，遇到要去處理、調整TLS、Volume，public etcd discovery可以執行 (TLS:https://etcd.io/docs/v3.4/op-guide/security/) (Volume:https://docs.docker.com/storage/volumes/、https://etcd.io/docs/v3.4/op-guide/container/) + "110年度第4期日盛新進人員職安課程"連線測試
+6/18 etcd TLS設定 (自產生憑證、測試) + etcd custme etcd discovery + 更新etcd cluster
+
+
+6/21
+6/22 docker network + docker command
+6/23 confd on windows，nginx + confd + etcd
+
+6/25 nginx(TLS) + confd + etcd for dynamic reserve proxy、solve self-signed SSL certificate of localhost nginx (because windows admin center bind 443 port)
+     construct iis + modify web.config of iis for reserve proxy 
+
+6/28 1. iis + confd + etcd for dynamic reserve proxy + 2. iis(TLS) + confd + etcd for dynamic reserve proxy
+*confd 用watch，若etcd crash，會幾乎是無限迴圈，用interval雖是polling，但可以無影響到CPU
+*confd 執行時，若etcd尚未啟動，confd會無法執行。但若是已啟動後，任意開關etcd(只要跟confd啟動設定的ip跟port不變)，不會影響confd。
+6/29 fill up dynamic reserve proxy information of JIRA + etcd backup and restore
+6/30 update docker on windows server 2019 (still working normally) + docker container backup and restore
+7/1 Add wmi_exporter to monitor + Add blackbox_exporter to monitor + List commonly used rules
+7/2 Docker 無法於開機正常啟動
+1.1 前天更新完、昨日使用皆無問題
+1.2 今日啟動就無法正常執行
+1.3 直接重新啟動無效，要關閉再啟動才可正常執行
+1.4 原以為是windows程序有先後順序造成，經測試不是windows程序影響
+1.5 重複開啟後，發現是docker desktop，自己必須啟動第二次後才能正常執行
+1.6 太快速兩次啟動也無效，似乎是第一次執行docker desktop有直行到某些部分，才讓之後再執行docker desktop順利使用
+1.7 目前改動的開機運行docker desktop程序，改為啟動兩次的動作
+1.8 持續注意之後docker desktop更新後是否有改善
+
+
+Update Grafana dashboard + Update alertmanager rules
+Ansible
+SaltStack
+Chef
+
+
+7/12
+1. 2021證券法規課程(金保法/ 個資法)
+1. Docker Volume，LCOW & Docker Desktop對比
+7/13 
+1. VM Server電子表單處理
+1. LCOW下Docker stop花費過長時間問題或無法完成
+  1.1 etcd、cadvisor停止時，花費極長時間或無法完成
+  1.2 nginx不影響
+  1.3 在Docker Desktop環境，沒有這個問題
+  1.4 似乎是既有問題
+  https://github.com/moby/moby/issues/37919
+  https://github.com/docker/for-win/issues/2642
+
+
+
+7/27
+1. Setup Ansible on Ubuntu
+2. OpenSSH on Windows Server (cannot install openSSH server) (use winrm + python)
+3. winrm on Ubuntu (pywinrm)
+4. test ansible playbook
+
+7/28
+1. Test powershell by ansible playbook
+2. Set reverseproxy playbook
+
+7/29
+1. Setting VMWare
+2. Modify Ansible Playbook
+   2.1 Add var
+   2.2 Setup surrounding
+
+7/30
+1. Modify Ansible Playbook
+   1.1 Create folder to save necessary file
+   1.2 Download file
+   1.3 Unzip file
+   1.4 Install file
+   1.5 Setup surrounding
+   1.6 Setup startup file
+2. Test monitoring server 
+
+8/2
+1. 試用期考核資料處理
+2. 2021職業安全衛生教育訓練課程
+3. iPush交接
+
+8/4
+1. 試用期考核資料處理
+2. eManager加密密碼因應正式環境調整流程
+3. Ansible調整設定
+** 無法正常的關閉process (一定要用force)
+
+1. iis 開啟ARR
+Set-WebConfigurationProperty -filter /system.webServer/proxy -name enabled -value True
+//2. 新增對應虛擬目錄
+//2.1 建立實體目錄
+//2.2 iis連結實體目錄
+//New-WebVirtualDirectory -Site "Default Web Site" -Name "etcd" -PhysicalPath "c:\inetpub\wwwroot\etcd"
+3. restart iis
+iisreset.exe /restart
+
+10.168.2.134:2379 : etcd
+10.168.2.134:9182 : wmi_exporter
+10.168.2.134:9115 : blackbox
+
+
+eManager加密密碼流程處理
+1. DB先新增EncPwd欄位，內容為Password欄位的SHA256值，原Password欄位值仍先保留
+2. Web程式改，先檢查EncPwd，若EncPwd不對，比較Password，通過仍可正常登入，此時寫入log
+3. 寫log在Server，約2周後，檢查log，若有誤修正Web
+4. 若無誤，則將原先DB的Password值清除
+5. Web程式，log部分，因為正常只走EncPwd，就不會再走到寫log紀錄的判斷，故就不需要特別在重新更新Web程式
+
+
+8/5
+1. 復興大戶問題處理 (loaderlock => Rayin回覆是JIHSUNFSCAPITAL.dll，在win10使用regsvr32註冊會卡住) (修正RayinVTS.dll)
+2. eManager寫log處理
+
+
+8/6
+1. eManager寫log處理
+   1.1 Server端須提供log file寫入權限
+   1.2 log格式
+
+
+8/9
+1. VBScript Server.MapPath路徑使用
+2. 修改iKeyLoginNew.asp的判斷條件 (僅加密密碼比較不同，但非加密密碼相同時再加以記錄)
+
+3. 復興大戶問題處理 (密碼被鎖 : 尋求學澧協助)
+
+
+8/10
+1. 修改iKeyLoginNew.asp的判斷條件 (僅加密密碼比較不同，但非加密密碼相同時再加以記錄)
+2. 修改eManagerPWD.asp的判斷條件 (僅加密密碼比較不同，但非加密密碼相同時再加以記錄)
+3. 復興大戶問題處理
+
+
+
+原因: 客戶反應一直斷線
+
+解決: 是中台(http://10.168.2.146/wtsapgw/index.jsp)設定中rtrade ip設定有誤，修正為210.71.247.77
+(同步更新SOP: 導入用戶DLL API SOP_20210810.docx)
+
+
+8/11 
+1. 修改eManagerPWD.asp的判斷條件 (僅加密密碼比較不同，但非加密密碼相同時再加以記錄)
+2. 測試環境測試
+
+8/12
+1. 程式調整
+2. 測試環境測試
+
+8/13
+1. 個人電腦升級WIN10_20H2升級作業
+1. 測試環境測試
+2. 送測、過版資料整理
+
+8/16
+1. 事務處理
+
+8/17
+1. 復興大戶對撮處理
+1. 事務處理
+
+
+
+8/18
+
+
+問題: 無法成回
+原因: 缺少對撮帳戶
+解決:
+1. 請客戶提供第2組帳戶
+2. 開通委任帳戶 (龍哥，志鴻，晨暐)
+3. 帝維協助此帳戶加入測試帳號
+4. 若客戶要求開信用戶，建一些現股庫存，將受託額度跟信用額度放大，再麻煩志鴻，晨暐
+
+
+
+1. 事務處理
+
+8/23
+2. 防制洗錢及打擊資恐教育訓練
+
+
+#===================================================================
+Q:
+有windows native的etcd可用嗎? 
+Work log再提出如何評估該採用windows native或是linux container的分析吧。
+幾個限制因素供參，若用Windows 10 PC做實驗會跟server版有誤差：
+	正式環境運作的是Windows server 2019 "long term support"版本，其支援LCOW or WSL2是否有達production成熟度。
+	Windows server 2019 container的監控管理機制是否已經齊全，交給營運單位須評估。
+	其他
+
+#===================================================================
+#2021/06/15
+目前的進度，預計是今天把監控的部分做最後的一些測試跟確認。
+也預計是做完後，把針對的評估項目確認如下。
+
+針對etcd，
+1.	可以順利達到KV的功能，因此若要達到server/clinet等有可能會有變動的資訊，可以透過etcd來做動態儲存、查詢。
+2.	針對etcd cluster，我有使用static的方式做基本測試，
+甲、	可達到多台主機共用資料資訊。
+乙、	應可以達到etcd互相備份的功能，但之前測試時，有遇到提示NTP無法同步，因此無法備份，故目前互相備份尚未完全釐清。
+3.	針對etcd cluster的discovery，以及DNS discovery則還沒測試。
+4.	之前client的部分，是使用curl，或是內建etcdctl來測試。部門內相關需要應用到client功能的程式，是要使用etcd的RESTFul API，或是其他方式，這方面可能要依應用程式來判斷。
+
+針對微服務，
+1.	在Server2019上，幾乎一定能建構Hyper-V，因此使用Docker Desktop by Hyper-V應是沒有問題的，經幾周簡易測試下，使用上也算沒有問題。
+2.	依windows目前資訊，若windows之後漸漸不支援Hyper-V，目前也在強化WSL2的功能，因此若是Docker Desktop by Hyper-V轉為Docker Desktop by WSL2，也不會影響微服務功能。
+3.	etcd幾乎在改版後也會出微服務版本，且之前評估也可自行build微服務image，因此也不會受改版而無法使用。
+
+針對營運人員微服務監控，
+1.	目前針對採取的監控架構 cAdvisor(in Docker on Server2019) + Prometheus + Grafana + alertmanager (on User Host)，在設定好監控條件下，針對etcd或是整個微服務，都能有一定的監控跟告警能力，應該也可以協助營運運作。
+2.	Prometheus + Grafana + alertmanager 是要部屬在主機外部的監控機器上，或是依安全性都要部屬在內部主機內，都可以調整。
+3.	Prometheus + Grafana + alertmanager是要執行windows的執行檔，或是依照微服務執行，也都可以調整。
+
+所以整理目前的評估，
+若是打算有漸漸往微服務前進，應可以使用Doker Desktop by Hyper-V，加上相關監控環境，先開始運用部分微服務的功能。
+
+
+若把監控的部分做最後的一些測試跟確認後，原先針對etcd、etcd微服務、微服務監控的評估，基本評估也算完成，
+因此接續的工作及方向也需跟你請教，目前考慮到的有幾個方面，
+1.	目前在評估的架構下，Docker內只有etcd + cAdvisor，管理還算方便，但若之後有把監控的微服務也放入，或是考慮繼續加入其他微服務，是否要目前就先對Docker Swarm/Kubernetes/OpenShift等管理微服務機制，做個了解。
+2.	針對之前etcd 的功能或測試，再更進一步地確認。
+3.	依實務環境做出真正實際的建構。
+4.	部門其他事項處理
+我想到的是以上可能的方向，在煩請你確認後告知後續方向，謝謝。
+
+
+*目前是基本評估，每個工具的微服務，都有可以更深入的應用，之後因應使用方式，都可能會需要再更進階使用相關應用
+ex: *etcd多台部屬，互相關聯性，以及是否有設定因應多台部屬需調整
+    *Prometheus是pull資料回來，會儲存在local的儲存空間，相關儲存空間的清理規則及方式，要再考慮跟研究
+    *Grafana的更細項顯示
+    *alertmanager告警規則
+
+#===================================================================
+1.	目前在評估的架構下，Docker內只有etcd + cAdvisor，管理還算方便，但若之後有把監控的微服務也放入，或是考慮繼續加入其他微服務，是否要目前就先對Docker Swarm/Kubernetes/OpenShift等管理微服務機制，做個了解。
+現況夠用的話，這些群集管理機制可以等下一階段再考慮要不要導入
+2.	針對之前etcd 的功能或測試，再更進一步地確認。
+3.	依實務環境做出真正實際的建構。
+可研究nginx搭配etcd使用。
+
+應用場景會考慮用nginx設定 reverse proxy模式做gateway，
+假設背後執行多個日盛行情程式(SAMGO)做微服務接口(HTTP模式)，
+nginx搭配etcd使用之目的在實現動態指向有效的SAMGO服務的效果。
+
+王宣斯: 
+SAMGO負責回覆報價查詢，
+reverse proxy的功能就是把外部查詢轉給內部負責的程式，內部程式回覆的結果再轉回給外部
+內部負責工作的程式可增可減，所以要搭配etcd做動態指向，nginx預設是有靜態指向設定檔，只是不夠彈性
+譬如 https://www.programmersought.com/article/79104512523/
+samgo是範例也可以是別的程式，你要建模擬環境的話，可以用iis開好幾個站台，每個站台放不同網頁，來模擬內部負責工作的程式
+
+*reserve proxy
+*nginx + etcd => iis + etcd
+*docker-compose (nginx + etcd + cAdvisor (+ Prometheus + alertmanager))
+
+
+宣斯，上週五有回覆防火牆申請的事宜，才發現沒有注意到你們在我請假的週二有談到是要申請192.168.39."103"，而不是鈺雯原先投影片的192.168.39."104"，所以在這樣的狀況下我還是申請了192.168.39."104"，請問我是在開一張單，取消104，然後申請103嗎?再麻煩說明，謝謝。
+
+
+#===================================================================
+8/16
+宣斯，上周提到科技業的前同事直接提出邀約，希望我能回到科技業在幫忙他。而在目前對於公司在合併的不踏實狀況下，我決定答應他的邀約。
+因此要跟您提出離職的申請，仍感謝您當初願意提供機會讓我進來金融業嘗試，若有造成不便之處，也煩請您多加見諒。
+相關離職所需要進行的流程或事務，再麻煩您協助。我尚未回覆相關之後就職的時間，因此仍有彈性的時間可以配合您的安排，謝謝。
+
+
+
+8/17
+感謝您跟銘鴻給的建議與分享，
+經思考後，還是決定依照昨日提的規畫來加以進行，
+所以還是要麻煩您協助安排相關離職的流程，謝謝。
+
+由於這個星期五(8/20)，我有個人事務需要處理，
+因此需要請假一天，如果有任何影響之處，再麻煩您先告知，謝謝。
+
+系統權限註銷(變更)明細表
+
+資料庫管理帳號
+(經辦:營運資料庫管理組-黃啟翰)
+遠端管理(IPKVM)帳號
+（經辦:營運系統規劃組-陳光韋）
+伺服器負責人
+（經辦:營運系統規劃組-陳光韋）
+主機/網域帳號授權
+（經辦:營運系統規劃組-林嘉祿）
+櫃員碼註銷
+(經辦:資訊處營運產品服務證期組-甘璨嘉)
+
+
+
+#===================================================================
+1. 復興客戶
+   1.1 通知復興專案負責人，聯繫人轉移為藺琬耀 (aeon@jsun.com，分機:#5516)
+2. eManager 加密強化
+   2.1 新增、修改檔案 (Add: sha256.inc&commonfunc.inc，Modify: iKeyLoginNew.asp&eManagerPWD.asp)
+   2.2 新增使用者: 照之前方式新增使用者，之後變更EncPwd
+       2.2.1 new user
+       2.2.2 UPDATE iKeyDetail SET EncPwd = CONVERT(VARCHAR(64),HashBytes('SHA2_256', Password),2), Password = NULL WHERE UID = 'Axxxxxxxxx';
+   2.3 使用加密密碼後，使用者若遺忘密碼，將其DB中EncPwd改為50920c2fbe074af9bae822f531f5106035d6fc69467f9295bfdf3be74c30230d (SHA256("test123."))，告知密碼改為"test123."，並請他進入後自行修改密碼
+       (UPDATE iKeyDetail SET EncPwd = CONVERT(VARCHAR(64),HashBytes('SHA2_256', 'test123.'),2), Password = NULL, UpdatePwdTime = '2020-01-01 00:00:00' WHERE UID = 'Axxxxxxxxx';)
+   2.4 需求單轉移 (20210722009-01)
+   2.5 \\jbcmfiles\組態變更\X20050266eManager，有依照原需求單擺好的原本預計過版的資料 (如下方資料)
+3. reverse proxy 架設
+   3.1 etcd ref by http://vmpanzerdev12:8080/browse/ADV-156
+   3.2 reverse proxy ref by http://vmpanzerdev12:8080/browse/ADV-159
+   3.3 Ansible ref by http://vmpanzerdev12:8080/browse/ADV-156?focusedCommentId=31700&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-31700
+       3.3.1 playbook: http://vmpanzerdev12:8080/secure/attachment/30937/ansible-reverseproxy.yml
+       3.3.2 playbook cmd: ansible-playbook ansible-reverseproxy.yml -e myhost=win
+   3.4 有使用到DEVSUBQS03當作測試
+4. Server申請人 (DEVSUBQS03 [10.168.2.134] & DEVSUBQS04 [10.168.2.169])
+   4.1 http://vmpanzerdev12:8080/browse/QUIZ-137
+   4.2 Password: ZAQ!2wsxc
+   4.3 使用DEVSUBQS03當作部署reverse prosy的測試伺服器
+
+
+
+Need Delete:
+1. host:
+   1.1 Chrome & IE information
+   1.2 C: => prometheus & grafana & alertmanager
+   1.3 D: => Work & WIN10_20H2
+   1.4 E: => 除D520MT
+   ****** E:\Outlook
+   1.5 圖片
+   1.6 網路位置
+       1.6.1 MuseDev (musecon1)\@Dino
+   1.7 Application Uninstall
+   1.8 Outlook
+   1.9 E:\Download\Exit
+2. DEVSUBQS03
+   2.1 D: => Dino
