@@ -1448,5 +1448,6 @@ Need Delete:
    1.7 Application Uninstall
    1.8 Outlook
    1.9 E:\Download\Exit
+   1.10 垃圾桶
 2. DEVSUBQS03
    2.1 D: => Dino
