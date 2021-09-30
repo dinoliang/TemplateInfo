@@ -1,6 +1,6 @@
 1. Mount shared folder
-edit : /etc/fstab
-and new : .host:/shared     /mnt/hgfs       vmhgfs     defaults  0  0
+edit : vi /etc/fstab
+and new : vmhgfs-fuse    /mnt/hgfs    fuse    defaults,allow_other    0    0
 
 2. 方向鍵
 gedit /etc/vim/vimrc.tiny
