@@ -6,3 +6,27 @@ and new : vmhgfs-fuse    /mnt/hgfs    fuse    defaults,allow_other    0    0
 gedit /etc/vim/vimrc.tiny
 set nocompatible
 set backspace=2 
+
+3. python on Ubuntu
+sudo apt update
+sudo apt install python3-pip
+
+4. VSCode on Ubuntu
+https://code.visualstudio.com/download
+sudo dpkg -i code_xxx
+start vscode : code
+
+5. VSCode python on Ubuntu
+View -> Extensions or press Ctrl + Shift + x. Enter python on the Search Box
+We can also install the recommended Python Extension Pack including Python, MagicPython(, Jinja, and Django).
+install the extension Code Runner to execute the program.
+print("Hello Python!!") on hello.py
+
+6. Git
+sudo apt install git
+git config user.email "aaa@xxx.com"
+git config user.name "bbb"
+
+git config --global user.email "aaa@xxx.com"
+git config --global user.name "bbb"
+
