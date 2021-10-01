@@ -48,6 +48,16 @@ mkvirtualenv py3cv3 -p python3
 workon py3cv3
 (if fail : source ~/.bashrc & workon py3cv3
 
+exit workon:
+deactivate
+
 一个是基本装opencv，带contrib的是高配版，带一些收费或者专利的算法（当然opencv不收费，是指你商用的话需要收一些费吧），还有一些比较新的算法的高级版本。
 pip3 install opencv-contrib-python
+
+8. C++ Compiler on Ubuntu
+sudo apt install build-essential
+g++ --version
+
+9. C++ on VSCode Ubuntu
+https://code.visualstudio.com/docs/cpp/config-linux
 
