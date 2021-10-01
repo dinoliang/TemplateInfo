@@ -11,6 +11,8 @@ set backspace=2
 sudo apt update
 sudo apt install python3-pip
 
+sudo pip3 install numpy
+
 4. VSCode on Ubuntu
 https://code.visualstudio.com/download
 sudo dpkg -i code_xxx
@@ -29,4 +31,23 @@ git config user.name "bbb"
 
 git config --global user.email "aaa@xxx.com"
 git config --global user.name "bbb"
+
+7. OpenCV on Ubuntu
+sudo pip install virtualenv virtualenvwrapper
+vi ~/.bashrc 
+& Add :
+###
+# virtualenv and virtualenvwrapper
+export WORKON_HOME=$HOME/.virtualenvs
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+source /usr/local/bin/virtualenvwrapper.sh
+###
+test : source ~/.bashrc
+
+mkvirtualenv py3cv3 -p python3
+workon py3cv3
+(if fail : source ~/.bashrc & workon py3cv3
+
+一个是基本装opencv，带contrib的是高配版，带一些收费或者专利的算法（当然opencv不收费，是指你商用的话需要收一些费吧），还有一些比较新的算法的高级版本。
+pip3 install opencv-contrib-python
 
